@@ -57,6 +57,6 @@ class User(db.Model):
         try:
             return jwt.decode(token, current_app.config.get('SECRET_KEY'), algorithm='HS256')['sub']
         except jwt.ExpiredSignatureError:
-            return "Signature expired. Please login again."
+            return "Signature expired. Please log in again."
         except jwt.InvalidTokenError:
-            return "Invalid token. Please login again"
+            return "Invalid token. Please log in again."
