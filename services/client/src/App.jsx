@@ -1,10 +1,13 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
 
 import About from './components/About';
 import AddUser from './components/AddUser';
+import Form from './components/Form';
+import NavBar from './components/NavBar';
 import UsersList from './components/UsersList';
-import { Switch, Route } from 'react-router-dom';
+
 
 
 class App extends Component {
@@ -12,9 +15,15 @@ class App extends Component {
     super();
 
     this.state = {
+      title: 'TestDriven.io',
       users: [],
       username: '',
       email: '',
+      formData: {
+        username: '',
+        email: '',
+        password: ''
+      },
     }
 
     this.addUser = this.addUser.bind(this);
@@ -57,32 +66,47 @@ class App extends Component {
 
   render() {
     return (
-      <section className="section">
-        <div className="container">
-          <div className="columns">
-            <div className="column is-half">
-              <br/>
-              <Switch>
-                <Route exact path='/' render={() => (
-                  <div>
-                    <h1 className="title is-1">All Users</h1>
-                    <hr/><br/>
-                    <AddUser
-                      username={this.state.username}
-                      email={this.state.email}
-                      addUser={this.addUser}
-                      handleChange={this.handleChange}
+      <div>
+        <NavBar title={this.state.title} />
+        <section className="section">
+          <div className="container">
+            <div className="columns">
+              <div className="column is-half">
+                <br/>
+                <Switch>
+                  <Route exact path='/' render={() => (
+                    <div>
+                      <h1 className="title is-1">All Users</h1>
+                      <hr/><br/>
+                      <AddUser
+                        username={this.state.username}
+                        email={this.state.email}
+                        addUser={this.addUser}
+                        handleChange={this.handleChange}
+                      />
+                      <br/><br/>
+                      <UsersList users={this.state.users}/>
+                    </div>
+                  )} />
+                  <Route exact path='/about' component={About}/>
+                  <Route exact path='/register' render={() => (
+                    <Form
+                      formType={'Register'}
+                      formData={this.state.formData}
                     />
-                    <br/><br/>
-                    <UsersList users={this.state.users}/>
-                  </div>
-                )} />
-                <Route exact path='/about' component={About}/>
-              </Switch>
+                  )} />
+                  <Route exact path='/login' render={() => (
+                    <Form
+                      formType={'Login'}
+                      formData={this.state.formData}
+                    />
+                  )} />
+                </Switch>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     )
   }
 };
