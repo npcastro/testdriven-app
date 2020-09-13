@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import About from './components/About';
-import AddUser from './components/AddUser';
 import Form from './components/Form';
 import Logout from './components/Logout';
 import NavBar from './components/NavBar';
@@ -124,18 +123,7 @@ class App extends Component {
                 <br/>
                 <Switch>
                   <Route exact path='/' render={() => (
-                    <div>
-                      <h1 className="title is-1">All Users</h1>
-                      <hr/><br/>
-                      <AddUser
-                        username={this.state.username}
-                        email={this.state.email}
-                        addUser={this.addUser}
-                        handleChange={this.handleChange}
-                      />
-                      <br/><br/>
-                      <UsersList users={this.state.users}/>
-                    </div>
+                    <UsersList users={this.state.users}/>
                   )} />
                   <Route exact path='/about' component={About}/>
                   <Route exact path='/register' render={() => (
