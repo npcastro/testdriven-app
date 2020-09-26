@@ -6,3 +6,5 @@ env
 .vscode
 
 services/users/htmlcov
+
+node_modules
