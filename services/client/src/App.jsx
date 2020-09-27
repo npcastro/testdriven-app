@@ -25,14 +25,20 @@ class App extends Component {
         email: '',
         password: ''
       },
-      isAuthenticated: false,
+      isAuthenticated: this.getIsAuthenticated(),
     }
+
+    console.log(this.state)
 
     this.addUser = this.addUser.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
     this.handleUserFormSubmit = this.handleUserFormSubmit.bind(this);
     this.logoutUser = this.logoutUser.bind(this);
+  }
+
+  getIsAuthenticated() {
+    return (window.localStorage.getItem('authToken') ? true : false);
   }
 
   componentDidMount() {
