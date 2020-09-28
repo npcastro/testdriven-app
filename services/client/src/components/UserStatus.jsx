@@ -4,7 +4,7 @@ import axios from 'axios';
 
 class UserStatus extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = {
       email: '',
       id: '',
