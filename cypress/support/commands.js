@@ -1,15 +1,15 @@
-Cypress.Commands.add("register_user", (username, email) => {
+Cypress.Commands.add("register_user", (username, email, password) => {
   cy.visit('/register')
       .get('input[name="username"]').type(username)
       .get('input[name="email"]').type(email)
-      .get('input[name="password"]').type('test')
+      .get('input[name="password"]').type(password)
       .get('input[type="submit"]').click();
 });
 
-Cypress.Commands.add("login_user", (email) => {
+Cypress.Commands.add("login_user", (email, password) => {
   cy.get('a').contains('Log In').click()
       .get('input[name="email"]').type(email)
-      .get('input[name="password"]').type('test')
+      .get('input[name="password"]').type(password)
       .get('input[type="submit"]').click()
 });
 

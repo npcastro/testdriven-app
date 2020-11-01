@@ -2,6 +2,7 @@ const randomstring = require('randomstring');
 
 const username = randomstring.generate();
 const email = `${username}@test.com`;
+const password = 'greaterthanten';
 
 
 describe('Status', () => {
@@ -16,7 +17,7 @@ describe('Status', () => {
 
   it('should display user info if a user is logged in', () => {
     // register user
-    cy.register_user(username, email);
+    cy.register_user(username, email, password);
 
     cy.wait(500);
 

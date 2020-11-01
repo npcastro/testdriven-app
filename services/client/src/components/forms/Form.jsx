@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 
+import FormErrors from './FormErrors.jsx';
+import {registerFormRules, loginFormRules} from './form-rules.js';
+
 class Form extends Component {
   constructor (props) {
     super();
@@ -10,7 +13,10 @@ class Form extends Component {
         username: '',
         email: '',
         password: ''
-      }
+      },
+      registerFormRules: registerFormRules,
+      loginFormRules: loginFormRules,
+      valid: false,
     };
 
     this.handleFormChange = this.handleFormChange.bind(this);
@@ -20,6 +26,7 @@ class Form extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.formType !== prevProps.formType) {
       this.clearForm();
+      this.validateForm();
     }
   }
 
@@ -27,6 +34,7 @@ class Form extends Component {
     const obj = this.state.formData;
     obj[event.target.name] = event.target.value;
     this.setState(obj);
+    this.validateForm();
   };
 
   handleUserFormSubmit(event) {
@@ -52,6 +60,7 @@ class Form extends Component {
 
   componentDidMount() {
     this.clearForm();
+    this.validateForm();
   };
 
   clearForm() {
@@ -60,10 +69,69 @@ class Form extends Component {
     });
   };
 
+  validateForm() {
+    const self = this;
+    const formData = this.state.formData;
+    self.resetRules();
+
+    if (self.props.formType === 'Register') {
+      const formRules = self.state.registerFormRules;
+      if (formData.username.length > 5) formRules[0].valid = true;
+      if (formData.email.length > 5) formRules[1].valid = true;
+      if (this.validateEmail(formData.email)) formRules[2].valid = true;
+      if (formData.password.length > 10) formRules[3].valid = true;
+      self.setState({registerFormRules: formRules})
+      if (self.allTrue()) self.setState({valid: true});
+    }
+
+    if (self.props.formType === 'Login') {
+      const formRules = self.state.loginFormRules;
+      if (formData.email.length > 0) formRules[0].valid = true;
+      if (formData.password.length > 0) formRules[1].valid = true;
+      self.setState({loginFormRules: formRules})
+      if (self.allTrue()) self.setState({valid: true});
+    }
+  };
+
+  validateEmail(email) {
+    // eslint-disable-next-line
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  };
+
+  allTrue() {
+    let formRules = loginFormRules;
+    if (this.props.formType === 'Register') {
+      formRules = registerFormRules;
+    }
+    for (const rule of formRules) {
+      if (!rule.valid) return false;
+    }
+    return true;
+  };
+
+  resetRules() {
+    const registerFormRules = this.state.registerFormRules;
+    for (const rule of registerFormRules) {
+      rule.valid = false;
+    }
+    this.setState({registerFormRules: registerFormRules})
+    const loginFormRules = this.state.loginFormRules;
+    for (const rule of loginFormRules) {
+      rule.valid = false;
+    }
+    this.setState({loginFormRules: loginFormRules})
+    this.setState({valid: false});
+  };
+
   render() {
     if (this.props.isAuthenticated) {
       return <Redirect to='/' />;
     };
+    let formRules = this.state.loginFormRules;
+    if (this.props.formType === 'Register') {
+      formRules = this.state.registerFormRules;
+    }
     return (
       <div>
         {this.props.formType === 'Login' &&
@@ -73,6 +141,10 @@ class Form extends Component {
           <h1 className="title is-1">Register</h1>
         }
         <hr/><br/>
+        <FormErrors
+          formType={this.props.formType}
+          formRules={formRules}
+        />
         <form onSubmit={(event) => this.handleUserFormSubmit(event)}>
           {this.props.formType === 'Register' &&
             <div className="field">
@@ -113,6 +185,7 @@ class Form extends Component {
             type="submit"
             className="button is-primary is-medium is-fullwidth"
             value="Submit"
+            disabled={!this.state.valid}
           />
         </form>
       </div>
