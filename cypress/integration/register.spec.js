@@ -20,6 +20,7 @@ describe('Register', () => {
     // assert user is redirected to '/'
     cy.contains('All Users');
     cy.contains(username);
+    cy.get('.notification.is-success').contains('Welcome!');
     cy.get('.navbar-burger').click();
     cy.get('.navbar-menu').within(() => {
       cy.get('.navbar-item').contains('User Status')
@@ -50,5 +51,47 @@ describe('Register', () => {
     cy.get('.validation-list > .error').contains(
       'Password must be greater than 10 characters.');
   });
+
+  it('should throw an error if the username is taken', () => {
+    cy.register_user(username, `${email}unique`, password);
+
+    //assert user registration failed
+    cy.contains('All Users').should('not.be.visible');
+    cy.contains('Register');
+    cy.get('.navbar-burger').click();
+    cy.get('.navbar-menu').within(() => {
+      cy
+        .get('.navbar-item').contains('User Status').should('not.be.visible')
+        .get('.navbar-item').contains('Log Out').should('not.be.visible')
+        .get('.navbar-item').contains('Log In')
+        .get('.navbar-item').contains('Register');
+    });
+    cy
+      .get('.notification.is-success').should('not.be.visible')
+      .get('.notification.is-danger').contains('That user already exists.');
+  });
+
+  it('should throw an error if the email is taken', () => {
+    cy.register_user(`${username}unique`, email, password);
+
+    //assert user registration failed
+    cy.contains('All Users').should('not.be.visible');
+    cy.contains('Register');
+    cy.get('.navbar-burger').click();
+    cy.get('.navbar-menu').within(() => {
+      cy
+        .get('.navbar-item').contains('User Status').should('not.be.visible')
+        .get('.navbar-item').contains('Log Out').should('not.be.visible')
+        .get('.navbar-item').contains('Log In')
+        .get('.navbar-item').contains('Register');
+    });
+    cy
+      .get('.notification.is-success').should('not.be.visible')
+      .get('.notification.is-danger').contains('That user already exists.');
+  });
+
+
+
+
 
 });
