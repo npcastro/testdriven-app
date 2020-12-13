@@ -1,7 +1,6 @@
 version: '3.7'
 
 services:
-
   users:
     build:
       context: ./services/users
@@ -55,5 +54,18 @@ services:
       - REACT_APP_USERS_SERVICE_URL=http://localhost
       # - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     stdin_open: true
+    depends_on:
+      - users
+
+  swagger:
+    build:
+      context: ./services/swagger
+      dockerfile: Dockerfile
+    volumes:
+      - './services/swagger/swagger.json:/usr/share/nginx/html/swagger.json'
+    ports:
+      - 3008:8080
+    environment:
+      - URL=swagger.json
     depends_on:
       - users
