@@ -8,3 +8,5 @@ env
 services/users/htmlcov
 
 node_modules
+
+.python-version
