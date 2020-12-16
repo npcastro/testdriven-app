@@ -17,7 +17,7 @@ then
     ./awscli-bundle/install -b ~/bin/aws
     export PATH=~/bin:$PATH
     export TAG=$TRAVIS_BRANCH
-    # add AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY env vars
+    # AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY must be set on travis
     export REPO=$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
     aws ecr get-login-password --region us-east-1 \
     | docker login --username AWS \
