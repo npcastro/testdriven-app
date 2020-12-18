@@ -1,8 +1,35 @@
 #!/bin/sh
-echo "Pulling services images from ECR"
 
-# - export REPO=$AWS_ACCOUNT.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME
-# - export REPO=$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
-# - docker pull $(REPO):$(TRAVIS_BRANCH)
+pull_and_build() {
+  echo "Pulling services images from ECR"
+  export TAG=$TRAVIS_BRANCH
+  env=$1
 
-# - docker build --cache-from $(REPO):$(TRAVIS_BRANCH) -t $(REPO):$(TRAVIS_COMMIT) .
+  # users
+  docker pull $ECR_REPO/$USERS:$TAG
+  docker build --cache-from $ECR_REPO/$USERS:$TAG -f Dockerfile-$env ./services/users
+
+  # users db
+  docker pull $ECR_REPO/$USERS_DB:$TAG
+  docker build --cache-from $ECR_REPO/$USERS_DB:$TAG -f Dockerfile ./services/users/project/db
+
+  # client
+  docker pull $ECR_REPO/$CLIENT:$TAG
+  docker build --cache-from $ECR_REPO/$CLIENT:$TAG -f Dockerfile-$env ./services/client
+
+  # swagger
+  docker pull $ECR_REPO/$SWAGGER:$TAG
+  docker build --cache-from $ECR_REPO/$SWAGGER:$TAG -f Dockerfile-$env ./services/swagger
+}
+
+
+aws ecr get-login-password --region us-east-1 \
+    | docker login --username AWS --password-stdin $ECR_REPO
+
+if [ "$TRAVIS_BRANCH" == "staging" ]
+then
+  pull_and_build stage
+elif [ "$TRAVIS_BRANCH" == "production" ]
+then
+  pull_and_build prod
+fi
