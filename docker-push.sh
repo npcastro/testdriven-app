@@ -24,20 +24,19 @@ then
   if [ "$TRAVIS_BRANCH" == "staging" ] || \
      [ "$TRAVIS_BRANCH" == "production" ]
   then
-    # users
-    docker build $USERS_REPO -t $USERS:$COMMIT -f Dockerfile-$DOCKER_ENV
+    echo "Pushing Users service"
     docker tag $USERS:$COMMIT $ECR_REPO/$USERS:$TAG
     docker push $ECR_REPO/$USERS:$TAG
-    # users db
-    docker build $USERS_DB_REPO -t $USERS_DB:$COMMIT -f Dockerfile
+
+    echo "Pushing Users DB service"
     docker tag $USERS_DB:$COMMIT $ECR_REPO/$USERS_DB:$TAG
     docker push $ECR_REPO/$USERS_DB:$TAG
-    # client
-    docker build $CLIENT_REPO -t $CLIENT:$COMMIT -f Dockerfile-$DOCKER_ENV --build-arg REACT_APP_USERS_SERVICE_URL=TBD
+
+    echo "Pushing Client service"
     docker tag $CLIENT:$COMMIT $ECR_REPO/$CLIENT:$TAG
     docker push $ECR_REPO/$CLIENT:$TAG
-    # swagger
-    docker build $SWAGGER_REPO -t $SWAGGER:$COMMIT -f Dockerfile-$DOCKER_ENV
+
+    echo "Pushing Swagger service"
     docker tag $SWAGGER:$COMMIT $ECR_REPO/$SWAGGER:$TAG
     docker push $ECR_REPO/$SWAGGER:$TAG
   fi

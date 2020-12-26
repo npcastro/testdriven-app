@@ -5,24 +5,21 @@ pull_and_build() {
   export TAG=$TRAVIS_BRANCH
   env=$1
 
-  ls -l
-  ls -l ./services
-
-  # users
+  echo "Pulling Users service"
   docker pull $ECR_REPO/$USERS:$TAG
-  docker build ./services/users --cache-from $ECR_REPO/$USERS:$TAG -f ./services/users/Dockerfile-$env
+  docker build $USERS_REPO --cache-from $ECR_REPO/$USERS:$TAG -f Dockerfile-$env -t $USERS:$COMMIT
 
-  # users db
+  echo "Pulling Users DB service"
   docker pull $ECR_REPO/$USERS_DB:$TAG
-  docker build ./services/users/project/db --cache-from $ECR_REPO/$USERS_DB:$TAG -f ./services/users/project/db/Dockerfile
+  docker build $USERS_DB_REPO --cache-from $ECR_REPO/$USERS_DB:$TAG -f Dockerfile -t $USERS_DB:$COMMIT
 
-  # client
+  echo "Pulling Client service"
   docker pull $ECR_REPO/$CLIENT:$TAG
-  docker build ./services/client --cache-from $ECR_REPO/$CLIENT:$TAG -f ./services/client/Dockerfile-$env
+  docker build $CLIENT_REPO --cache-from $ECR_REPO/$CLIENT:$TAG -f Dockerfile-$env -t $CLIENT:$COMMIT
 
-  # swagger
+  echo "Pulling Swagger service"
   docker pull $ECR_REPO/$SWAGGER:$TAG
-  docker build ./services/swagger --cache-from $ECR_REPO/$SWAGGER:$TAG -f ./services/swagger/Dockerfile-$env
+  docker build $SWAGGER_REPO --cache-from $ECR_REPO/$SWAGGER:$TAG -f Dockerfile-$env -t $SWAGGER:$COMMIT
 }
 
 aws ecr get-login-password --region us-east-1 \
