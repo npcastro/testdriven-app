@@ -27,6 +27,7 @@ before_install:
 before_script:
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
   - npm install
+  - bash ./install_aws_cli.sh
   - bash ./docker-pull.sh
 
 script:

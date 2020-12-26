@@ -12,9 +12,6 @@ then
   if [ "$TRAVIS_BRANCH" == "staging" ] || \
      [ "$TRAVIS_BRANCH" == "production" ]
   then
-    curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-    unzip awscli-bundle.zip
-    ./awscli-bundle/install -b ~/bin/aws
     export PATH=~/bin:$PATH
     export TAG=$TRAVIS_BRANCH
     # AWS_ACCOUNT_ID, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY must be set on travis

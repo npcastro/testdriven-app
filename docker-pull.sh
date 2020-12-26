@@ -25,10 +25,6 @@ pull_and_build() {
   docker build ./services/swagger --cache-from $ECR_REPO/$SWAGGER:$TAG -f ./services/swagger/Dockerfile-$env
 }
 
-curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
-unzip awscli-bundle.zip
-./awscli-bundle/install -b ~/bin/aws
-
 aws ecr get-login-password --region us-east-1 \
     | docker login --username AWS --password-stdin $ECR_REPO
 
