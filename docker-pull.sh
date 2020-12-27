@@ -15,7 +15,8 @@ pull_and_build() {
 
   echo "Pulling Client service"
   docker pull $ECR_REPO/$CLIENT:$TAG
-  docker build $CLIENT_REPO --cache-from $ECR_REPO/$CLIENT:$TAG -f Dockerfile-$env -t $CLIENT:$COMMIT
+  docker build $CLIENT_REPO --cache-from $ECR_REPO/$CLIENT:$TAG -f Dockerfile-$env -t $CLIENT:$COMMIT \
+    --build-arg REACT_APP_USERS_SERVICE_URL=$REACT_APP_USERS_SERVICE_URL
 
   echo "Pulling Swagger service"
   docker pull $ECR_REPO/$SWAGGER:$TAG
