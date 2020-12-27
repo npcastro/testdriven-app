@@ -31,8 +31,18 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
+  nginx:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile-stage
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - users
+      - client
+
   client:
-    container_name: client
     build:
       context: ./services/client
       dockerfile: Dockerfile-stage
@@ -58,14 +68,3 @@ services:
       - URL=swagger.json
     depends_on:
       - users
-
-  nginx:
-    build:
-      context: ./services/nginx
-      dockerfile: Dockerfile-stage
-    restart: always
-    ports:
-      - 80:80
-    depends_on:
-      - users
-      - client

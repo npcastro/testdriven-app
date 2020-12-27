@@ -5,6 +5,7 @@ services:
 
 env:
   DOCKER_COMPOSE_VERSION: 1.27.4
+  COMPOSE_DOCKER_CLI_BUILD: 1
   COMMIT: ${TRAVIS_COMMIT::8}
   MAIN_REPO: https://github.com/npcastro/testdriven-app.git
   ECR_REPO: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
