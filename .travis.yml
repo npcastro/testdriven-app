@@ -48,3 +48,4 @@ addons:
 after_success:
   - bash ./scripts/docker-push.sh
   - bash ./scripts/docker-deploy-stage.sh
+  - bash ./scripts/docker-deploy-prod.sh
