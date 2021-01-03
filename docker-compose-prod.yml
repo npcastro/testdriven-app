@@ -11,10 +11,9 @@ services:
     expose:
       - 5000
     environment:
-      - FLASK_APP=project/__init__.py
       - FLASK_ENV=production
       - APP_SETTINGS=project.config.ProductionConfig
-      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_prod
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
       - SECRET_KEY=${SECRET_KEY}
     depends_on:
@@ -60,7 +59,7 @@ services:
   swagger:
     build:
       context: ./services/swagger
-      dockerfile: Dockerfile-stage
+      dockerfile: Dockerfile-prod
       cache_from:
         - $ECR_REPO/$SWAGGER:$TRAVIS_BRANCH
     expose:
