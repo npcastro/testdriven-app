@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 
 import About from './components/About';
+import Footer from './components/Footer';
 import Form from './components/forms/Form';
 import Logout from './components/Logout';
 import Message from './components/Message';
@@ -92,6 +93,9 @@ class App extends Component {
                 <br/>
                 <Switch>
                   <Route exact path='/' render={() => (
+                    <p>Something</p>
+                  )} />
+                  <Route exact path='/all-users' render={() => (
                     <UsersList
                       users={this.state.users}
                     />
@@ -129,6 +133,7 @@ class App extends Component {
             </div>
           </div>
         </section>
+      <Footer/>
       </div>
     )
   }
