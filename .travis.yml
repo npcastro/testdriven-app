@@ -4,7 +4,8 @@ services:
   - docker
 
 env:
-  DOCKER_COMPOSE_VERSION: 1.23.2
+  DOCKER_COMPOSE_VERSION: 1.27.4
+  COMPOSE_DOCKER_CLI_BUILD: 1
   COMMIT: ${TRAVIS_COMMIT::8}
   MAIN_REPO: https://github.com/npcastro/testdriven-app.git
   ECR_REPO: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
@@ -27,6 +28,7 @@ before_install:
 before_script:
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
   - npm install
+  - bash ./scripts/install_aws_cli.sh
   - bash ./docker-pull.sh
 
 script:
@@ -44,4 +46,6 @@ addons:
     - libgconf-2-4
 
 after_success:
-  - bash ./docker-push.sh
+  - bash ./scripts/docker-push.sh
+  - bash ./scripts/docker-deploy-stage.sh
+  - bash ./scripts/docker-deploy-prod.sh

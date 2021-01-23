@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost"
+      "url": "http://testdriven-production-alb-1778330533.us-east-1.elb.amazonaws.com"
     }
   ],
   "paths": {
@@ -21,7 +21,6 @@
         }
       }
     },
-
     "/users": {
       "get": {
         "summary": "Returns all users",
@@ -62,7 +61,6 @@
         }
       }
     },
-
     "/users/{id}": {
       "get": {
         "summary": "Returns a user based on a single user ID",
@@ -88,7 +86,6 @@
         }
       }
     },
-
     "/auth/register": {
       "post": {
         "summary": "Creates a new user",
@@ -113,7 +110,6 @@
         }
       }
     },
-
     "/auth/login": {
       "post": {
         "summary": "Logs a user in",
@@ -144,7 +140,6 @@
         }
       }
     },
-
     "/auth/status": {
       "get": {
         "summary": "Returns the logged in user's status",
@@ -160,7 +155,6 @@
         }
       }
     },
-
     "/auth/logout": {
       "get": {
         "summary": "Logs a user out",
