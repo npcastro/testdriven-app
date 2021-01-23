@@ -28,7 +28,7 @@ before_install:
 before_script:
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
   - npm install
-  - bash ./install_aws_cli.sh
+  - bash ./scripts/install_aws_cli.sh
   - bash ./docker-pull.sh
 
 script:
@@ -46,4 +46,6 @@ addons:
     - libgconf-2-4
 
 after_success:
-  - bash ./docker-push.sh
+  - bash ./scripts/docker-push.sh
+  - bash ./scripts/docker-deploy-stage.sh
+  - bash ./scripts/docker-deploy-prod.sh

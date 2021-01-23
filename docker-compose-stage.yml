@@ -7,7 +7,7 @@ services:
       context: ./services/users
       dockerfile: Dockerfile-stage
       cache_from:
-        - $USERS:$COMMIT
+        - $ECR_REPO/$USERS:$TRAVIS_BRANCH
     expose:
       - 5000
     environment:
@@ -24,7 +24,7 @@ services:
       context: ./services/users/project/db
       dockerfile: Dockerfile
       cache_from:
-        - $USERS_DB:$COMMIT
+        - $ECR_REPO/$USERS_DB:$TRAVIS_BRANCH
     expose:
       - 5432
     environment:
@@ -47,7 +47,7 @@ services:
       context: ./services/client
       dockerfile: Dockerfile-stage
       cache_from:
-        - $CLIENT:$COMMIT
+        - $ECR_REPO/$CLIENT:$TRAVIS_BRANCH
       args:
         - NODE_ENV=production
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
@@ -61,7 +61,7 @@ services:
       context: ./services/swagger
       dockerfile: Dockerfile-stage
       cache_from:
-        - $SWAGGER:$COMMIT
+        - $ECR_REPO/$SWAGGER:$TRAVIS_BRANCH
     expose:
       - 8080
     environment:
