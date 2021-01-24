@@ -1,6 +1,4 @@
-# project/tests/test_config.py
-
-
+import os
 import unittest
 
 from flask import current_app
@@ -18,6 +16,11 @@ class TestDevelopmentConfig(TestCase):
 
     def test_app_is_development(self):
         self.assertFalse(current_app is None)
+
+        self.assertTrue(
+            app.config['SQLALCHEMY_DATABASE_URI'] ==
+            os.environ.get('DATABASE_URL')
+        )
 
 
 class TestTestingConfig(TestCase):
