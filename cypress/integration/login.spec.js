@@ -42,7 +42,8 @@ describe('Login', () => {
         .get('.navbar-item').contains('Register').should('not.be.visible');
     });
 
-    cy.logout_user();
+    // log a user out
+    cy.get('a').contains('Log Out').click();
 
     // assert '/logout' is displayed properly
     cy.get('p').contains('You are now logged out');
