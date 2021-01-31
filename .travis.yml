@@ -9,6 +9,10 @@ env:
   COMMIT: ${TRAVIS_COMMIT::8}
   MAIN_REPO: https://github.com/npcastro/testdriven-app.git
   ECR_REPO: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
+  EXERCISES: test-driven-exercises
+  EXERCISES_REPO: ${MAIN_REPO}#${TRAVIS_BRANCH}:services/exercises
+  EXERCISES_DB: test-driven-exercises_db
+  EXERCISES_DB_REPO: ${MAIN_REPO}#${TRAVIS_BRANCH}:services/exercises/project/db
   USERS: test-driven-users
   USERS_REPO: ${MAIN_REPO}#${TRAVIS_BRANCH}:services/users
   USERS_DB: test-driven-users_db
@@ -26,10 +30,14 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script:
+  - export LOAD_BALANCER_STAGE_DNS_NAME=http://testdriven-staging-alb-357083246.us-east-1.elb.amazonaws.com
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
+  - export REACT_APP_EXERCISES_SERVICE_URL=http://127.0.0.1
+  - export REACT_APP_API_GATEWAY_URL=https://ko9mgynyxg.execute-api.us-east-1.amazonaws.com/v1/execute
   - npm install
   - bash ./scripts/install_aws_cli.sh
   - bash ./docker-pull.sh
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
 script:
   - bash test-ci.sh $TRAVIS_BRANCH
