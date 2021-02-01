@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from flask_restful import Resource, Api
 from sqlalchemy import exc
 
@@ -66,3 +66,11 @@ class ExercisesList(Resource):
 
 
 api.add_resource(ExercisesList, '/exercises')
+
+
+@exercises_blueprint.route('/exercises/ping', methods=['GET'])
+def ping_pong():
+    return jsonify({
+        'status': 'success',
+        'message': 'pong!'
+    })
