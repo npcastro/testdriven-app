@@ -3,9 +3,11 @@ from io import StringIO
 
 
 def lambda_handler(event, context):
-    # get coad from payload
+    # get code from payload
     code = event['answer']
-    test_code = code + '\nprint(sum(1,1))'
+    test = event['test']
+    solution = event['solution']
+    test_code = f'{code} \nprint({test})'
 
     # capture stdout
     buffer = StringIO()
@@ -21,6 +23,6 @@ def lambda_handler(event, context):
     sys.stdout = sys.stdout
 
     # check
-    if int(buffer.getvalue()) == 2:
+    if buffer.getvalue()[:-1] == solution:
         return True
     return False

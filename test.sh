@@ -51,7 +51,7 @@ all() {
   docker-compose exec client npm test -- --coverage --watchAll=false
   inspect $? client
   docker-compose down
-  # e2e
+  e2e
 }
 
 # run appropriate tests
