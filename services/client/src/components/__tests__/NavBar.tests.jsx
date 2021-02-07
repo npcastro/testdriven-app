@@ -8,6 +8,11 @@ import NavBar from '../NavBar';
 
 const title = 'Hello, world!';
 
+beforeEach(() => {
+  console.error = jest.fn();
+  console.error.mockClear();
+});
+
 test('NavBar renders properly', () => {
   const wrapper = shallow(<NavBar title={title}/>);
   const element = wrapper.find('strong');

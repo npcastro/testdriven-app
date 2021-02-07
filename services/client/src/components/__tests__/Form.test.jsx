@@ -15,6 +15,8 @@ const testData = [
     },
     loginUser: jest.fn(),
     isAuthenticated: false,
+    loginUser: jest.fn(),
+    createMessage: jest.fn(),
   },
   {
     formType: 'Login',
@@ -25,8 +27,15 @@ const testData = [
     },
     loginUser: jest.fn(),
     isAuthenticated: false,
+    loginUser: jest.fn(),
+    createMessage: jest.fn(),
   }
 ]
+
+beforeEach(() => {
+  console.error = jest.fn();
+  console.error.mockClear();
+});
 
 describe('When not authenticated', () => {
   testData.forEach((el) => {
@@ -85,6 +94,8 @@ describe('When authenticated', () => {
       formType={el.formType}
       formData={el.formData}
       isAuthenticated={true}
+      loginUser={el.loginUser}
+      createMessage={el.createMessage}
     />;
 
     it(`${el.formType} Redirects properly`, () => {

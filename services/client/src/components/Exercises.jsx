@@ -1,4 +1,5 @@
 import axios from 'axios';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import Exercise from './Exercise';
@@ -96,6 +97,10 @@ class Exercises extends Component {
       </div>
     )
   };
+};
+
+Exercises.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
 };
 
 export default Exercises;
