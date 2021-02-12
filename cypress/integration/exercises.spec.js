@@ -44,7 +44,5 @@ describe('exercises', () => {
       .get('button').contains('Run Code').click()
       .wait('@gradeExercise')
       .get('h5 > .grade-text').contains('Correct!');
-
-
   });
 });
