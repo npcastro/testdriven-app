@@ -78,7 +78,7 @@ services:
     expose:
       - 5000
     environment:
-      - APP_SETTINGS=project.config.StagingConfig
+      - APP_SETTINGS=project.config.ProductionConfig
       - DATABASE_URL=postgres://postgres:postgres@exercises-db:5432/exercises_prod
       - DATABASE_TEST_URL=postgres://postgres:postgres@exercises-db:5432/exercises_test
       - FLASK_ENV=production
@@ -95,3 +95,19 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
+  scores:
+    build:
+      context: ./services/scores
+      dockerfile: Dockerfile-prod
+    volumes:
+      - './services/scores:/usr/src/app'
+    ports:
+      - 5000
+    environment:
+      - APP_SETTINGS=project.config.ProductionConfig
+      - FLASK_APP=project/__init__.py
+      - FLASK_ENV=production
+      - SECRET_KEY=my_precious
+    depends_on:
+      - users
