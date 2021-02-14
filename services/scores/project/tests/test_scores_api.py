@@ -98,6 +98,27 @@ class TestScoresService(BaseTestCase):
             self.assertEqual('New score was added!', data['message'])
             self.assertIn('success', data['status'])
 
+    def test_update_score(self):
+        add_score(1, 1, True)
+        add_score(2, 1, True)
+        add_score(2, 2, True)
+        add_score(2, 3, False)
+
+        with self.client:
+            response = self.client.put(
+                '/scores/3',
+                data=json.dumps({
+                    'user_id': 2,
+                    'correct': True,
+                }),
+                content_type='application/json',
+                headers=({'Authorization': 'Bearer test'})
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual('Score updated', data['message'])
+            self.assertIn('success', data['status'])
+
     def test_ping(self):
         """Ensure the /ping route behaves correctly."""
         response = self.client.get('/scores/ping')

@@ -60,6 +60,41 @@ class Scores(Resource):
 api.add_resource(Scores, '/scores')
 
 
+class ScoreEndpoint(Resource):
+    method_decorators = {'put': [authenticate_restful]}
+
+    def put(self, resp, exercise_id):
+        put_data = request.get_json()
+
+        if not put_data:
+            response_object = {'status': 'fail', 'message': 'Invalid payload.'}
+            return response_object, 400
+
+        user_id = put_data.get('user_id')
+        correct = put_data.get('correct')
+
+        try:
+            score = Score.query.filter(Score.user_id == user_id, Score.exercise_id == exercise_id).first()
+            score.correct = correct
+            db.session.commit()
+
+            response_object = {
+                'status': 'success',
+                'message': 'Score updated'
+            }
+            return response_object, 200
+        except (exc.IntegrityError, ValueError):
+            db.session().rollback()
+            response_object = {
+                'status': 'fail',
+                'message': 'Invalid payload.'
+            }
+            return response_object, 400
+
+
+api.add_resource(ScoreEndpoint, '/scores/<exercise_id>')
+
+
 class UserScores(Resource):
     method_decorators = {'get': [authenticate_restful]}
 
