@@ -36,7 +36,11 @@ class TestScoresService(BaseTestCase):
         add_score(2, 3, False)
 
         with self.client:
-            response = self.client.get('/scores/user', query_string={'user_id': 2})
+            response = self.client.get(
+                '/scores/user',
+                query_string={'user_id': 2},
+                headers=({'Authorization': 'Bearer test'})
+            )
 
             data = json.loads(response.data.decode())
 
@@ -62,7 +66,11 @@ class TestScoresService(BaseTestCase):
         add_score(2, 3, False)
 
         with self.client:
-            response = self.client.get('/scores/user/2', query_string={'user_id': 2})
+            response = self.client.get(
+                '/scores/user/2',
+                query_string={'user_id': 2},
+                headers=({'Authorization': 'Bearer test'})
+            )
 
             data = json.loads(response.data.decode())
 

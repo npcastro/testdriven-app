@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_restful import Resource, Api
 
 from project.api.models import Score
+from project.api.utils import authenticate_restful
 
 
 scores_blueprint = Blueprint('scores', __name__)
@@ -27,8 +28,9 @@ api.add_resource(ScoresList, '/scores')
 
 
 class UserScores(Resource):
+    method_decorators = {'get': [authenticate_restful]}
 
-    def get(self):
+    def get(self, resp):
         """Get all scores of a single user"""
         url_params = request.args
 
@@ -49,8 +51,9 @@ api.add_resource(UserScores, '/scores/user')
 
 
 class UserScore(Resource):
+    method_decorators = {'get': [authenticate_restful]}
 
-    def get(self, exercise_id):
+    def get(self, resp, exercise_id):
         """Get a score of a single user"""
         url_params = request.args
 
