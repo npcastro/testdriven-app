@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_restful import Resource, Api
+from sqlalchemy import exc
 
+from project import db
 from project.api.models import Score
 from project.api.utils import authenticate_restful
 
@@ -9,7 +11,8 @@ scores_blueprint = Blueprint('scores', __name__)
 api = Api(scores_blueprint)
 
 
-class ScoresList(Resource):
+class Scores(Resource):
+    method_decorators = {'post': [authenticate_restful]}
 
     def get(self):
         """Get all scores"""
@@ -23,8 +26,38 @@ class ScoresList(Resource):
 
         return response_object, 200
 
+    def post(self, resp):
+        post_data = request.get_json()
 
-api.add_resource(ScoresList, '/scores')
+        if not post_data:
+            response_object = {
+                'status': 'fail',
+                'message': 'Invalid payload.'
+            }
+            return response_object, 400
+
+        user_id = post_data.get('user_id')
+        exercise_id = post_data.get('exercise_id')
+        correct = post_data.get('correct')
+
+        try:
+            db.session.add(Score(user_id=user_id, exercise_id=exercise_id, correct=correct))
+            db.session.commit()
+            response_object = {
+                'status': 'success',
+                'message': 'New score was added!'
+            }
+            return response_object, 201
+        except (exc.IntegrityError, ValueError):
+            db.session().rollback()
+            response_object = {
+                'status': 'fail',
+                'message': 'Invalid payload.'
+            }
+            return response_object, 400
+
+
+api.add_resource(Scores, '/scores')
 
 
 class UserScores(Resource):
