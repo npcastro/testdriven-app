@@ -82,6 +82,7 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@exercises-db:5432/exercises_prod
       - DATABASE_TEST_URL=postgres://postgres:postgres@exercises-db:5432/exercises_test
       - FLASK_ENV=production
+      # - USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     depends_on:
       - users
       - exercises-db
@@ -108,9 +109,11 @@ services:
       - APP_SETTINGS=project.config.ProductionConfig
       - DATABASE_URL=postgres://postgres:postgres@scores-db:5432/scores_prod
       - DATABASE_TEST_URL=postgres://postgres:postgres@scores-db:5432/scores_test
+      - EXERCISES_SERVICE_URL=${REACT_APP_EXERCISES_SERVICE_URL}
       - FLASK_APP=project/__init__.py
       - FLASK_ENV=production
       - SECRET_KEY=my_precious
+      - USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     depends_on:
       - users
       - exercises

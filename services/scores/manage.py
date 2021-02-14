@@ -1,5 +1,7 @@
+import os
 import sys
 import unittest
+import requests
 
 import coverage
 from flask.cli import FlaskGroup
@@ -48,19 +50,31 @@ def cov():
     sys.exit(result)
 
 
-# @cli.command('recreate_db')
-# def recreate_db():
-#     db.drop_all()
-#     db.create_all()
-#     db.session.commit()
+@cli.command('recreate_db')
+def recreate_db():
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
 
 
-# @cli.command('seed_db')
-# def seed_db():
-#     db.session.add(
-#         Score(user_id=1, exercise_id=1, correct=True)
-#     )
-#     db.session.commit()
+@cli.command('seed_db')
+def seed_db():
+    url = '{0}/exercises'.format(os.environ.get('EXERCISES_SERVICE_URL'))
+    response = requests.get(url)
+    exercises = response.json()['data']['exercises']
+
+    url = '{0}/users'.format(os.environ.get('USERS_SERVICE_URL'))
+    response = requests.get(url)
+    users = response.json()['data']['users']
+
+    for user in users:
+        for exercise in exercises:
+            db.session.add(Score(
+                user_id=user['id'],
+                exercise_id=exercise['id'],
+                correct=True
+            ))
+    db.session.commit()
 
 
 if __name__ == '__main__':
