@@ -48,6 +48,26 @@ class UserScores(Resource):
 api.add_resource(UserScores, '/scores/user')
 
 
+class UserScore(Resource):
+
+    def get(self, exercise_id):
+        """Get a score of a single user"""
+        url_params = request.args
+
+        user_id = url_params.get('user_id')
+        score = Score.query.filter(Score.user_id == user_id, Score.exercise_id == exercise_id).first()
+
+        response_object = {
+            'status': 'success',
+            'data': score.to_json()
+        }
+
+        return response_object, 200
+
+
+api.add_resource(UserScore, '/scores/user/<exercise_id>')
+
+
 @scores_blueprint.route('/scores/ping', methods=['GET'])
 def ping_pong():
     return jsonify({

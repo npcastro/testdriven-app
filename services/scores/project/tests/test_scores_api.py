@@ -36,7 +36,6 @@ class TestScoresService(BaseTestCase):
         add_score(2, 3, False)
 
         with self.client:
-            # response = self.client.get('/scores/user?user_id=2')
             response = self.client.get('/scores/user', query_string={'user_id': 2})
 
             data = json.loads(response.data.decode())
@@ -54,6 +53,25 @@ class TestScoresService(BaseTestCase):
 
             self.assertEqual(3, data['data']['scores'][2]['exercise_id'])
             self.assertEqual(False, data['data']['scores'][2]['correct'])
+
+    def test_get_single_score_of_user(self):
+        """Ensure get single score by user behaves correctly."""
+        add_score(1, 1, True)
+        add_score(2, 1, True)
+        add_score(2, 2, True)
+        add_score(2, 3, False)
+
+        with self.client:
+            response = self.client.get('/scores/user/2', query_string={'user_id': 2})
+
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+
+            self.assertEqual(2, data['data']['user_id'])
+            self.assertEqual(2, data['data']['exercise_id'])
+            self.assertEqual(True, data['data']['correct'])
 
     def test_ping(self):
         """Ensure the /ping route behaves correctly."""
