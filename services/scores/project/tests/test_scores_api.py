@@ -68,7 +68,7 @@ class TestScoresService(BaseTestCase):
         with self.client:
             response = self.client.get(
                 '/scores/user/2',
-                query_string={'user_id': 2},
+                query_string={'exercise_id': 3},
                 headers=({'Authorization': 'Bearer test'})
             )
 
@@ -78,8 +78,8 @@ class TestScoresService(BaseTestCase):
             self.assertIn('success', data['status'])
 
             self.assertEqual(2, data['data']['user_id'])
-            self.assertEqual(2, data['data']['exercise_id'])
-            self.assertEqual(True, data['data']['correct'])
+            self.assertEqual(3, data['data']['exercise_id'])
+            self.assertEqual(False, data['data']['correct'])
 
     def test_add_score(self):
         with self.client:
