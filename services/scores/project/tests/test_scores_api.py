@@ -28,6 +28,33 @@ class TestScoresService(BaseTestCase):
             self.assertEqual(1, data['data']['scores'][1]['exercise_id'])
             self.assertEqual(False, data['data']['scores'][1]['correct'])
 
+    def test_get_all_scores_by_user(self):
+        """Ensure get all scores by user behaves correctly."""
+        add_score(1, 1, True)
+        add_score(2, 1, True)
+        add_score(2, 2, True)
+        add_score(2, 3, False)
+
+        with self.client:
+            # response = self.client.get('/scores/user?user_id=2')
+            response = self.client.get('/scores/user', query_string={'user_id': 2})
+
+            data = json.loads(response.data.decode())
+
+            self.assertEqual(response.status_code, 200)
+            self.assertIn('success', data['status'])
+
+            self.assertEqual(len(data['data']['scores']), 3)
+
+            self.assertEqual(1, data['data']['scores'][0]['exercise_id'])
+            self.assertEqual(True, data['data']['scores'][0]['correct'])
+
+            self.assertEqual(2, data['data']['scores'][1]['exercise_id'])
+            self.assertEqual(True, data['data']['scores'][1]['correct'])
+
+            self.assertEqual(3, data['data']['scores'][2]['exercise_id'])
+            self.assertEqual(False, data['data']['scores'][2]['correct'])
+
     def test_ping(self):
         """Ensure the /ping route behaves correctly."""
         response = self.client.get('/scores/ping')
