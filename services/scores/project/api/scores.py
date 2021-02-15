@@ -36,7 +36,7 @@ class Scores(Resource):
             }
             return response_object, 400
 
-        user_id = post_data.get('user_id')
+        user_id = int(resp['data']['id'])
         exercise_id = post_data.get('exercise_id')
         correct = post_data.get('correct')
 
@@ -70,19 +70,28 @@ class ScoreEndpoint(Resource):
             response_object = {'status': 'fail', 'message': 'Invalid payload.'}
             return response_object, 400
 
-        user_id = put_data.get('user_id')
+        user_id = int(resp['data']['id'])
         correct = put_data.get('correct')
 
         try:
             score = Score.query.filter(Score.user_id == user_id, Score.exercise_id == exercise_id).first()
-            score.correct = correct
-            db.session.commit()
+            if score:
+                score.correct = correct
+                db.session.commit()
 
-            response_object = {
-                'status': 'success',
-                'message': 'Score updated'
-            }
-            return response_object, 200
+                response_object = {
+                    'status': 'success',
+                    'message': 'Score updated'
+                }
+                return response_object, 200
+            else:
+                db.session.add(Score(user_id=user_id, exercise_id=exercise_id, correct=correct))
+                db.session.commit()
+                response_object = {
+                    'status': 'success',
+                    'message': 'New score was added!'
+                }
+                return response_object, 201
         except (exc.IntegrityError, ValueError):
             db.session().rollback()
             response_object = {
@@ -100,10 +109,8 @@ class UserScores(Resource):
 
     def get(self, resp):
         """Get all scores of a single user"""
-        url_params = request.args
 
-        user_id = url_params.get('user_id')
-        scores = Score.query.filter(Score.user_id == user_id)
+        scores = Score.query.filter_by(user_id=int(resp['data']['id']))
 
         response_object = {
             'status': 'success',
@@ -121,12 +128,10 @@ api.add_resource(UserScores, '/scores/user')
 class UserScore(Resource):
     method_decorators = {'get': [authenticate_restful]}
 
-    def get(self, resp, user_id):
+    def get(self, resp, score_id):
         """Get a score of a single user"""
-        url_params = request.args
 
-        exercise_id = url_params.get('exercise_id')
-        score = Score.query.filter(Score.user_id == user_id, Score.exercise_id == exercise_id).first()
+        score = Score.query.filter_by(user_id=int(resp['data']['id']),id=score_id).first()
 
         response_object = {
             'status': 'success',
@@ -136,7 +141,7 @@ class UserScore(Resource):
         return response_object, 200
 
 
-api.add_resource(UserScore, '/scores/user/<user_id>')
+api.add_resource(UserScore, '/scores/user/<score_id>')
 
 
 @scores_blueprint.route('/scores/ping', methods=['GET'])

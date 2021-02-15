@@ -30,15 +30,13 @@ class TestScoresService(BaseTestCase):
 
     def test_get_all_scores_by_user(self):
         """Ensure get all scores by user behaves correctly."""
-        add_score(1, 1, True)
-        add_score(2, 1, True)
-        add_score(2, 2, True)
-        add_score(2, 3, False)
+        add_score(33, 1, True)
+        add_score(33, 2, True)
+        add_score(33, 3, False)
 
         with self.client:
             response = self.client.get(
                 '/scores/user',
-                query_string={'user_id': 2},
                 headers=({'Authorization': 'Bearer test'})
             )
 
@@ -60,15 +58,13 @@ class TestScoresService(BaseTestCase):
 
     def test_get_single_score_of_user(self):
         """Ensure get single score by user behaves correctly."""
-        add_score(1, 1, True)
-        add_score(2, 1, True)
-        add_score(2, 2, True)
-        add_score(2, 3, False)
+        add_score(33, 1, True)
+        add_score(33, 2, True)
+        add_score(33, 3, False)
 
         with self.client:
             response = self.client.get(
-                '/scores/user/2',
-                query_string={'exercise_id': 3},
+                '/scores/user/3',
                 headers=({'Authorization': 'Bearer test'})
             )
 
@@ -77,7 +73,7 @@ class TestScoresService(BaseTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn('success', data['status'])
 
-            self.assertEqual(2, data['data']['user_id'])
+            self.assertEqual(33, data['data']['user_id'])
             self.assertEqual(3, data['data']['exercise_id'])
             self.assertEqual(False, data['data']['correct'])
 
@@ -86,8 +82,22 @@ class TestScoresService(BaseTestCase):
             response = self.client.post(
                 '/scores',
                 data=json.dumps({
-                    'user_id': 1,
                     'exercise_id': 4,
+                    'correct': True,
+                }),
+                content_type='application/json',
+                headers=({'Authorization': 'Bearer test'})
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 201)
+            self.assertEqual('New score was added!', data['message'])
+            self.assertIn('success', data['status'])
+
+    def test_put_score_first_time(self):
+        with self.client:
+            response = self.client.put(
+                '/scores/3',
+                data=json.dumps({
                     'correct': True,
                 }),
                 content_type='application/json',
@@ -100,15 +110,14 @@ class TestScoresService(BaseTestCase):
 
     def test_update_score(self):
         add_score(1, 1, True)
-        add_score(2, 1, True)
-        add_score(2, 2, True)
-        add_score(2, 3, False)
+        add_score(33, 1, True)
+        add_score(33, 2, True)
+        add_score(33, 3, False)
 
         with self.client:
             response = self.client.put(
                 '/scores/3',
                 data=json.dumps({
-                    'user_id': 2,
                     'correct': True,
                 }),
                 content_type='application/json',
