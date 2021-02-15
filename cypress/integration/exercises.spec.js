@@ -61,17 +61,26 @@ describe('exercises', () => {
       .get('.field.is-grouped')
       .get('button').contains('Next')
       .get('button').contains('Prev').should('not.be.visible')
+      get('.ace_comment').contains('# Enter your code here.')
       // click next
       .get('button').contains('Next').click()
       .get('button').contains('Next')
       .get('button').contains('Prev')
+      get('.ace_comment').contains('# Enter your code here.')
       // click next
       .get('button').contains('Next').click()
       .get('button').contains('Next').should('not.be.visible')
       .get('button').contains('Prev')
+      get('.ace_comment').contains('# Enter your code here.')
+      for (let i = 0; i < 23; i++) {
+        cy.get('textarea').type('{backspace}', { force: true })
+      }
+      cy
+        .get('textarea').type('def sum(x,y):\nreturn x+y', { force: true })
       // click prev
       .get('button').contains('Prev').click()
       .get('button').contains('Next')
       .get('button').contains('Prev');
+      get('.ace_comment').contains('# Enter your code here.')
   });
 });

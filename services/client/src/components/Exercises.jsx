@@ -30,6 +30,7 @@ class Exercises extends Component {
     this.renderButtons =this.renderButtons.bind(this);
     this.nextExercise = this.nextExercise.bind(this);
     this.prevExercise = this.prevExercise.bind(this);
+    this.resetEditor = this.resetEditor.bind(this);
   };
 
   componentDidMount() {
@@ -134,6 +135,7 @@ class Exercises extends Component {
       const currentExercise = this.state.currentExercise;
       this.setState({currentExercise: currentExercise + 1}, () => {
         this.renderButtons();
+        this.resetEditor();
       });
     }
   };
@@ -142,8 +144,22 @@ class Exercises extends Component {
       const currentExercise = this.state.currentExercise;
       this.setState({currentExercise: currentExercise - 1}, () => {
         this.renderButtons();
+        this.resetEditor();
       });
     }
+  };
+
+  resetEditor() {
+    const editor = {
+      value: '# Enter your code here.',
+      button: {
+        isDisabled: false,
+      },
+      showGrading: false,
+      showCorrect: false,
+      showIncorrect: false,
+    }
+    this.setState({editor: editor});
   };
 
   render() {
