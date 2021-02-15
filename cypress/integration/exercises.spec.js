@@ -11,7 +11,10 @@ describe('exercises', () => {
       .visit('/')
       .get('h1').contains('Exercises')
       .get('.notification.is-warning').contains('Please log in to submit an exercise.')
-      .get('button').should('not.be.visible');
+      .get('button').contains('Run Code').should('not.be.visible')
+      .get('.field.is-grouped')
+      .get('button').contains('Next')
+      .get('button').contains('Prev').should('not.be.visible');
   });
 
   it('should allow a user to submit an exercise if logged in', () => {
@@ -33,7 +36,10 @@ describe('exercises', () => {
       .get('h1').contains('Exercises')
       .get('.notification.is-success').contains('Welcome!')
       .get('.notification.is-danger').should('not.be.visible')
-      .get('button.button.is-primary').contains('Run Code');
+      .get('button.button.is-primary').contains('Run Code')
+      .get('.field.is-grouped')
+      .get('button').contains('Next')
+      .get('button').contains('Prev').should('not.be.visible');
 
     // assert user can submit exercise
     for (let i = 0; i < 23; i++) {
@@ -44,5 +50,28 @@ describe('exercises', () => {
       .get('button').contains('Run Code').click()
       .wait('@gradeExercise')
       .get('h5 > .grade-text').contains('Correct!');
+  });
+
+  it('should allow a user to move to different exercises', () => {
+    cy
+      .visit('/')
+      .get('h1').contains('Exercises')
+      .get('.notification.is-warning').contains('Please log in to submit an exercise.')
+      .get('button').contains('Run Code').should('not.be.visible')
+      .get('.field.is-grouped')
+      .get('button').contains('Next')
+      .get('button').contains('Prev').should('not.be.visible')
+      // click next
+      .get('button').contains('Next').click()
+      .get('button').contains('Next')
+      .get('button').contains('Prev')
+      // click next
+      .get('button').contains('Next').click()
+      .get('button').contains('Next').should('not.be.visible')
+      .get('button').contains('Prev')
+      // click prev
+      .get('button').contains('Prev').click()
+      .get('button').contains('Next')
+      .get('button').contains('Prev');
   });
 });
