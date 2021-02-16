@@ -19,6 +19,10 @@ env:
   USERS_DB_REPO: ${MAIN_REPO}#${TRAVIS_BRANCH}:services/users/project/db
   CLIENT: test-driven-client
   CLIENT_REPO: ${MAIN_REPO}#${TRAVIS_BRANCH}:services/client
+  SCORES: test-driven-scores
+  SCORES_REPO: ${MAIN_REPO}#${TRAVIS_BRANCH}:services/scores
+  SCORES_DB: test-driven-scores_db
+  SCORES_DB_REPO: ${MAIN_REPO}#${TRAVIS_BRANCH}:services/scores/project/db
   SWAGGER: test-driven-swagger
   SWAGGER_REPO: ${MAIN_REPO}#${TRAVIS_BRANCH}:services/swagger
   SECRET_KEY: my_precious
@@ -34,7 +38,7 @@ before_script:
   - if [[ "$TRAVIS_BRANCH" == "production" ]]; then export LOAD_BALANCER_DNS_NAME=http://testdriven-production-alb-1778330533.us-east-1.elb.amazonaws.com; fi
   - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
   - export REACT_APP_EXERCISES_SERVICE_URL=http://127.0.0.1
-  - export REACT_APP_API_GATEWAY_URL=https://ko9mgynyxg.execute-api.us-east-1.amazonaws.com/v1/execute
+  - export REACT_APP_API_GATEWAY_URL=https://ko9mgynyxg.execute-api.us-east-1.amazonaws.com/v2/execute
   - npm install
   - bash ./scripts/install_aws_cli.sh
   - bash ./docker-pull.sh

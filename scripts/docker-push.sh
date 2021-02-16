@@ -7,10 +7,12 @@ then
     export DOCKER_ENV=stage
     export REACT_APP_USERS_SERVICE_URL="http://testdriven-staging-alb-357083246.us-east-1.elb.amazonaws.com"
     export REACT_APP_EXERCISES_SERVICE_URL="http://testdriven-staging-alb-357083246.us-east-1.elb.amazonaws.com"
+    export REACT_APP_SCORES_SERVICE_URL="http://testdriven-staging-alb-357083246.us-east-1.elb.amazonaws.com"
   elif [[ "$TRAVIS_BRANCH" == "production" ]]; then
     export DOCKER_ENV=prod
     export REACT_APP_USERS_SERVICE_URL="http://testdriven-production-alb-1778330533.us-east-1.elb.amazonaws.com"
     export REACT_APP_EXERCISES_SERVICE_URL="http://testdriven-production-alb-1778330533.us-east-1.elb.amazonaws.com"
+    export REACT_APP_SCORES_SERVICE_URL="http://testdriven-production-alb-1778330533.us-east-1.elb.amazonaws.com"
     export DATABASE_URL="$AWS_RDS_URI"  # new
     export SECRET_KEY="$PRODUCTION_SECRET_KEY"  # new
   fi
@@ -43,7 +45,8 @@ then
     docker build $CLIENT_REPO --cache-from $ECR_REPO/$CLIENT:$TAG -f Dockerfile-$DOCKER_ENV -t $CLIENT:$COMMIT \
       --build-arg REACT_APP_USERS_SERVICE_URL=$REACT_APP_USERS_SERVICE_URL \
       --build-arg REACT_APP_EXERCISES_SERVICE_URL=$REACT_APP_EXERCISES_SERVICE_URL \
-      --build-arg REACT_APP_API_GATEWAY_URL=$REACT_APP_API_GATEWAY_URL
+      --build-arg REACT_APP_API_GATEWAY_URL=$REACT_APP_API_GATEWAY_URL \
+      --build-arg REACT_APP_SCORES_SERVICE_URL=$REACT_APP_SCORES_SERVICE_URL
     docker tag $CLIENT:$COMMIT $ECR_REPO/$CLIENT:$TAG
     docker push $ECR_REPO/$CLIENT:$TAG
 
